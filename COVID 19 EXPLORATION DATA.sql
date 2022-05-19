@@ -115,14 +115,13 @@ Present_vaccinated_people bigint
 )
 
 INSERT INTO #Percent_Population_Vaccinated
-
 SELECT deaths.continent, deaths.location, deaths.date, CONVERT(bigint,deaths.population) AS population, vaccine.new_vaccinations, SUM(CONVERT(bigint,vaccine.new_vaccinations)) 
- OVER (Partition By deaths.location Order By deaths.location, deaths.date) AS Present_vaccinated_people
- FROM Portfolio_Projects..CovidDeaths deaths
- Join Portfolio_Projects..CovidVaccinations vaccine
-    On deaths.location = vaccine.location
+       OVER (Partition By deaths.location Order By deaths.location, deaths.date) AS Present_vaccinated_people
+ FROM  Portfolio_Projects..CovidDeaths deaths
+ Join  Portfolio_Projects..CovidVaccinations vaccine
+   On  deaths.location = vaccine.location
 	and deaths.date = vaccine.date 
-WHERE deaths.continent IS NOT NULL
+WHERE  deaths.continent IS NOT NULL
 ORDER BY 2,3
 
 SELECT *, ( Present_vaccinated_people/population)*100
